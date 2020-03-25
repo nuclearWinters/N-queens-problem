@@ -4,18 +4,20 @@
 // ANIMATE ALGORITHM BY DECONSTRUCTING FOR LOOPS INTO IF-ELSE
 
 /* Function to check contraints
- * @return: True if in column j, no queen is placed from 0 to rows - 1  
+ * @return: True if in column j, no queen is placed from 0 to rows - 1
  * */
 // each solution is an array
 const meetConstraints = (rows, column, solution) => {
   for (let i = 0; i < rows; i++) {
-    if (solution[i] === column ||
-      Math.abs(column - solution[i]) === Math.abs(rows - i)) {
+    if (
+      solution[i] === column ||
+      Math.abs(column - solution[i]) === Math.abs(rows - i)
+    ) {
       return false;
     }
   }
   return true;
-}
+};
 
 const queen = {
   name: "queen",
@@ -36,7 +38,8 @@ const drawBoard = (n, totalSolutions, index) => {
 
   const div = d3.select("#svg-container");
   // create <svg>
-  const svg = div.append("svg")
+  const svg = div
+    .append("svg")
     .attr("width", boardSize + boxSize + "px")
     .attr("height", boardSize + boxSize + "px");
   labels = indexes.slice();
@@ -46,26 +49,38 @@ const drawBoard = (n, totalSolutions, index) => {
     }
   }
 
-  // top labels 
-  svg.selectAll("colLabel")
+  // top labels
+  svg
+    .selectAll("colLabel")
     .data(labels)
-    .enter().append("text")
-    .text(function (d) { return d; })
+    .enter()
+    .append("text")
+    .text(function(d) {
+      return d;
+    })
     .classed("colLabel", true)
     .attr("y", 0)
-    .attr("x", function (d, i) { return i * boxSize + boxSize / 2; })
+    .attr("x", function(d, i) {
+      return i * boxSize + boxSize / 2;
+    })
     .attr("dx", boxSize / 2)
     .attr("dy", boxSize / 3)
     .style("font-size", boxSize / 3 + "px")
     .style("text-anchor", "middle")
     .style("opacity", 0.8);
-  // left labels 
-  svg.selectAll("rowLabel")
+  // left labels
+  svg
+    .selectAll("rowLabel")
     .data(labels)
-    .enter().append("text")
-    .text(function (d) { return d; })
+    .enter()
+    .append("text")
+    .text(function(d) {
+      return d;
+    })
     .classed("rowLabel", true)
-    .attr("y", function (d, i) { return i * boxSize + boxSize / 2; })
+    .attr("y", function(d, i) {
+      return i * boxSize + boxSize / 2;
+    })
     .attr("x", 0)
     .attr("dx", boxSize / 4)
     .attr("dy", boxSize / 2)
@@ -76,7 +91,8 @@ const drawBoard = (n, totalSolutions, index) => {
   for (let i = 0; i < boardDimension; i++) {
     for (let j = 0; j < boardDimension; j++) {
       // draw each chess field
-      const box = svg.append("rect")
+      const box = svg
+        .append("rect")
         .attr("x", i * boxSize + boxSize / 2)
         .attr("y", j * boxSize + boxSize / 2)
         .attr("width", boxSize + "px")
@@ -89,46 +105,56 @@ const drawBoard = (n, totalSolutions, index) => {
     }
   }
 
-  // draw chess pieces 
+  // draw chess pieces
   for (let i = 0; i < boardDimension; i++) {
     for (let j = 0; j < boardDimension; j++) {
-      const chess = svg.append("text")
-        .classed('chess-pieces', true)
+      const chess = svg
+        .append("text")
+        .classed("chess-pieces", true)
         .attr("id", "b" + j + i)
         .attr("text-anchor", "middle")
         .attr("x", i * boxSize + boxSize / 2)
         .attr("y", j * boxSize + boxSize / 2)
         .attr("dx", boxSize / 2)
-        .attr("dy", boxSize * 3 / 4)
-        .attr("font-size", '45')
+        .attr("dy", (boxSize * 3) / 4)
+        .attr("font-size", "45")
         .style("text-shadow", "2px 2px 4px #757575");
-      chess.attr("X", chess.attr("x"))
-        .attr("Y", chess.attr("y"));
+      chess.attr("X", chess.attr("x")).attr("Y", chess.attr("y"));
       // // Draw pieces
       if (j === 0) {
-        chess.classed('row0', true);
+        chess.classed("row0", true);
       }
       if (j === 1) {
-        chess.classed('row1', true);
+        chess.classed("row1", true);
       }
       if (j === 2) {
-        chess.classed('row2', true);
+        chess.classed("row2", true);
       }
       if (j === 3) {
-        chess.classed('row3', true);
+        chess.classed("row3", true);
       }
       if (j === totalSolutions[index][i]) {
-        chess.attr("id", "b" + j + i)
-          .classed('team1', true)
+        chess
+          .attr("id", "b" + j + i)
+          .classed("team1", true)
           .text(queen.b);
       }
     }
   }
-}//end of drawBoard
+}; //end of drawBoard
 
 // ANIMATION
 let n = 4;
-const colors = ["green", "#FF5722", "brown", "black", "#FFC107", "#9C27B0", "#009688", "#E91E63"];
+const colors = [
+  "green",
+  "#FF5722",
+  "brown",
+  "black",
+  "#FFC107",
+  "#9C27B0",
+  "#009688",
+  "#E91E63"
+];
 let countCol = 0;
 let countRow = 0;
 let solIndex = 0;
@@ -141,7 +167,7 @@ let steps = 0;
 //default
 const init = () => {
   drawBoard(n, [[]], 0);
-}
+};
 init();
 
 /**
@@ -151,26 +177,28 @@ const nextStep = () => {
   steps++;
   //finish checking all columns
   if (countCol === n) {
-    //finish checking all solutions from previous row   
+    //finish checking all solutions from previous row
     if (solIndex === prevSolutions.length - 1) {
       prevSolutions = newSolutions.slice();
       newSolutions = [];
       countRow++;
       countCol = 0;
       solIndex = 0;
-      if (countRow === n) { // finish checking the last row
+      if (countRow === n) {
+        // finish checking the last row
         status.innerHTML = `There are total  ${prevSolutions.length} solutions. There are ${steps} steps.`;
         // draw all solutions in chess board
         for (let i = 0; i < prevSolutions.length; i++) {
           drawBoard(n, prevSolutions, i);
         }
-      };
+      }
 
       //hide all <text> in previous rows
       for (let i = 0; i <= countRow; i++) {
         d3.selectAll(".queens" + i).attr("visibility", "hidden");
       }
-    } else { //checking other columns, not at the last column yet
+    } else {
+      //checking other columns, not at the last column yet
       if (countRow > 0) {
         //move to the next solution of previous row
         countRow--;
@@ -179,7 +207,7 @@ const nextStep = () => {
         countCol = 0;
         countRow++;
       }
-    }// end of else
+    } // end of else
 
     if (countRow === 0) {
       countCol = 0;
@@ -191,7 +219,7 @@ const nextStep = () => {
     }
   } // end of checking when countCol === n
 
-  // for all other rows (except the 1st one), with each column, check constraints 
+  // for all other rows (except the 1st one), with each column, check constraints
   if (countRow > 0 && countRow < n && countCol <= n) {
     //hide all <text> in previous rows
     for (let i = 0; i <= countRow; i++) {
@@ -201,22 +229,39 @@ const nextStep = () => {
     status.innerHTML = `Check row ${countRow} and column  ${countCol} when queens are placed previously at [${solution}]. `;
     //display solution
     for (let i = 0; i < solution.length; i++) {
-      let solutionQ = d3.select("#b" + i + solution[i]).text(queen.b).datum(colors[solution[0]]).attr("fill", function (d) {
-        return d;
-      }).attr("visibility", "visible");
+      let solutionQ = d3
+        .select("#b" + i + solution[i])
+        .text(queen.b)
+        .datum(colors[solution[0]])
+        .attr("fill", function(d) {
+          return d;
+        })
+        .attr("visibility", "visible");
     }
     //select current <text> to check constraints
     let selectedQ = d3.select("#b" + countRow + countCol);
-    if (meetConstraints(countRow, countCol, solution)) { //meet constraints -> place queens
+    if (meetConstraints(countRow, countCol, solution)) {
+      //meet constraints -> place queens
       newSolutions.push(solution.concat([countCol]));
-      selectedQ.classed("queens" + countRow, true).text(queen.b).datum(colors[solution[0]]).attr("fill", function (d) {
-        return d;
-      });
-      status.innerHTML += `Store accepted solution [${solution.concat([countCol])}]`;
-    } else { //place X
-      selectedQ.classed("queens" + countRow, true).text("X").datum(colors[solution[0]]).attr("fill", function (d) {
-        return d;
-      });
+      selectedQ
+        .classed("queens" + countRow, true)
+        .text(queen.b)
+        .datum(colors[solution[0]])
+        .attr("fill", function(d) {
+          return d;
+        });
+      status.innerHTML += `Store accepted solution [${solution.concat([
+        countCol
+      ])}]`;
+    } else {
+      //place X
+      selectedQ
+        .classed("queens" + countRow, true)
+        .text("X")
+        .datum(colors[solution[0]])
+        .attr("fill", function(d) {
+          return d;
+        });
     }
     selectedQ.attr("visibility", "visible");
     countCol++;
@@ -226,18 +271,24 @@ const nextStep = () => {
     let solution = [];
     status.innerHTML = `Check row ${countRow} and column  ${countCol}. `;
     let selectedQ = d3.select("#b" + countRow + countCol);
-    selectedQ.classed("queens" + countRow, true).text(queen.b).datum(colors[countCol]).attr("fill", function (d) {
-      return d;
-    });
+    selectedQ
+      .classed("queens" + countRow, true)
+      .text(queen.b)
+      .datum(colors[countCol])
+      .attr("fill", function(d) {
+        return d;
+      });
     //check constraints and store solutions
     if (meetConstraints(countRow, countCol, solution)) {
-      // can place a queen at column j 
+      // can place a queen at column j
       newSolutions.push(solution.concat([countCol]));
-      status.innerHTML += `Store accepted solution [${solution.concat([countCol])}]`;
+      status.innerHTML += `Store accepted solution [${solution.concat([
+        countCol
+      ])}]`;
     }
     countCol++;
   }
-}
+};
 
 /**
  * AUTO RUN
@@ -245,7 +296,7 @@ const nextStep = () => {
 const autoRun = () => {
   // assign setInterval to a var to use clearInterval to stop animation
   autoAnimation = setInterval(nextStep, 100);
-}
+};
 
 /**
  * STOP ANIMATION
@@ -264,7 +315,7 @@ const stopAnimation = () => {
   newSolutions = [];
   prevSolutions = [];
   steps = 0;
-}
+};
 
 /**
  * click GET button to read input value
@@ -273,14 +324,11 @@ const clickGet = () => {
   //index = 0;
   n = parseInt(inputNum.value);
   if (Number.isNaN(n)) {
-    status.innerHTML = "Please enter a number";
-  }
-  else if (n < 4 || n > 10) {
-    status.innerHTML = "Please enter a number between 4 and 8";
-  }
-  else {
+    status.innerHTML = "Por favor ingresa un número";
+  } else if (n < 4 || n > 10) {
+    status.innerHTML = "Por favor ingresa un número entre 4 y 8";
+  } else {
     stopAnimation();
-    status.innerHTML = `The chess board size is now ${n}`;
+    status.innerHTML = `El tamaño del tablero es ${n}`;
   }
-}
-
+};
